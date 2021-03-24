@@ -28,6 +28,7 @@ steps:
     projectKey: 'b3abe9b9fb8df18363069eacbdcbf62dc9162bc6'
     projectName: 'console_sonar'
 
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
