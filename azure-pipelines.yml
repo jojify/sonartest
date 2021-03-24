@@ -25,14 +25,12 @@ steps:
     restoreSolution: 'SomeConsoleApplication.sln'
 
 - task: SonarCloudPrepare@1
-  displayName: 'Prepare analysis configuration'
   inputs:
-    SonarCloud: 'SC'
-    organization: 'myorga'
+    SonarCloud: 'SONAR_TOKEN'
+    organization: 'jojify'
     scannerMode: 'MSBuild'
-    projectKey: 'dotnet-framework-on-azdo'
-    projectName: 'Sample .NET Framework project with Azure DevOps'
-
+    projectKey: '79e28994a01930441e4baa9906a6d324046ff71d'
+    projectName: 'SONAR_TOKEN'    
 
 - task: VSBuild@1
   displayName: 'Build solution **\*.sln'
