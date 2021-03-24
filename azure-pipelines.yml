@@ -29,7 +29,7 @@ steps:
     SonarCloud: 'SONAR_TOKEN'
     organization: 'jojify'
     scannerMode: 'MSBuild'
-    projectKey: '79e28994a01930441e4baa9906a6d324046ff71d'
+    projectKey: '0608d13fdfe3eb7815d02bdfb94da868628b6f71'
     projectName: 'SONAR_TOKEN'    
 
 - task: VSBuild@1
