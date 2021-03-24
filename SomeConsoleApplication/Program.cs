@@ -13,6 +13,7 @@ namespace SomeConsoleApplication
             else
             {
                 Console.WriteLine("false");
+                Console.WriteLine(JustATrueValue());
             }
 
             Console.ReadKey();
@@ -26,6 +27,11 @@ namespace SomeConsoleApplication
         public static object Passthrough(object obj)
         {
             return obj;
+        }
+
+        public static bool JustATrueValue()
+        {
+            return false;
         }
     }
 }
