@@ -10,47 +10,37 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  buildPlatform: 'any cpu'
 
 steps:
-- task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 4.4.1'
-  inputs:
-    versionSpec: 4.4.1
+- task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
-  displayName: 'NuGet restore'
   inputs:
-    restoreSolution: 'SomeConsoleApplication.sln'
+    restoreSolution: '$(solution)'
 
-- task: SonarCloudPrepare@1
+- task: SonarQubePrepare@4
   inputs:
-    SonarCloud: 'SONAR_TOKEN'
-    organization: 'jojify'
+    SonarQube: 'consoleapp_sonar'
     scannerMode: 'MSBuild'
-    projectKey: '0608d13fdfe3eb7815d02bdfb94da868628b6f71'
-    projectName: 'SONAR_TOKEN'    
+    projectKey: 'b3abe9b9fb8df18363069eacbdcbf62dc9162bc6'
+    projectName: 'console_sonar'
 
 - task: VSBuild@1
-  displayName: 'Build solution **\*.sln'
   inputs:
-    solution: 'SomeConsoleApplication.sln'
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    
+
+- task: SonarQubeAnalyze@4
+- task: SonarQubePublish@4
+  inputs:
+    pollingTimeoutSec: '300'
 
 - task: VSTest@2
-  displayName: 'VsTest - testAssemblies'
   inputs:
-    testAssemblyVer2: |
-     **\$(BuildConfiguration)\*Test*.dll
-     !**\obj\**
-    codeCoverageEnabled: true
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
-
-- task: SonarCloudAnalyze@1
-  displayName: 'Run SonarCloud analysis'
-
-- task: SonarCloudPublish@1
-  displayName: 'Publish results on build summary'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
