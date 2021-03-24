@@ -25,7 +25,7 @@ steps:
   inputs:
     SonarQube: 'sonarconsoleapp'
     scannerMode: 'MSBuild'
-    projectKey: 'c77f43011f4cfedc5b99141897c084963fc74b8a'
+    projectKey: '875bea9264a7dffbaf5a485798441bf7325f6a3e'
     projectName: 'sonarconsoleapp'
 
 - task: VSBuild@1
