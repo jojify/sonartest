@@ -23,11 +23,10 @@ steps:
 
 - task: SonarQubePrepare@4
   inputs:
-    SonarQube: 'consoleapp_sonar'
+    SonarQube: 'sonartest'
     scannerMode: 'MSBuild'
-    projectKey: 'b3abe9b9fb8df18363069eacbdcbf62dc9162bc6'
-    projectName: 'console_sonar'
-
+    projectKey: '1933aa501e4390e05d21ee800d3c20426ea77962'
+    projectName: 'sonartest'
 
 - task: VSBuild@1
   inputs:
@@ -36,12 +35,30 @@ steps:
     configuration: '$(buildConfiguration)'
     
 
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\*test*.dll
+      !**\*TestAdapter.dll
+      !**\obj\**
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Get-ChildItem -Recurse -Filter "*.coverage" | % {  
+      $outfile = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"  
+      $output = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)  
+      "Analyse '$($_.Name)' with output '$outfile'..."  
+      . $env:USERPROFILE\.nuget\packages\microsoft.codecoverage\16.6.1\build  
+      etstandard1.0\CodeCoverage\CodeCoverage.exe analyze /output:$output $_.FullName  
+      }  
+      "Done"
+    workingDirectory: '$(Agent.TempDirectory)'
+
 - task: SonarQubeAnalyze@4
 - task: SonarQubePublish@4
   inputs:
     pollingTimeoutSec: '300'
-
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
