@@ -53,11 +53,12 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Write-Output "output"
+      Write-Output "testing"
       Get-ChildItem -Recurse -Filter "*.coverage" | % {  
       $outfile = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"  
       $output = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)  
-      Write-Output "$output"  
+      Write-Output "$output"
+      Write-Output "$outfile"  
       } 
 
       Get-ChildItem -Recurse -Filter "*.coverage" | % {  
