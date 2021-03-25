@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'Hosted Windows 2019 with VS2019'
+  vmImage: 'windows-latest'
 
 variables:
   solution: '**/*.sln'
@@ -59,7 +59,6 @@ steps:
     workingDirectory: '$(Agent.TempDirectory)'
 
 - task: SonarQubeAnalyze@4
-
 - task: SonarQubePublish@4
   inputs:
     pollingTimeoutSec: '300'
