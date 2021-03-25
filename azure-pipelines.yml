@@ -44,6 +44,11 @@ steps:
       !**\obj\**
     searchFolder: '$(System.DefaultWorkingDirectory)'
 
+- task: PublishTestResults@2
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
@@ -58,6 +63,9 @@ steps:
       "Done"
     showWarnings: true
     workingDirectory: '$(Agent.TempDirectory)'
+
+
+
 - task: SonarQubeAnalyze@4
 - task: SonarQubePublish@4
   inputs:
