@@ -53,7 +53,13 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Write-Output "Begin migrating components"
+      Write-Output "output"
+      Get-ChildItem -Recurse -Filter "*.coverage" | % {  
+      $outfile = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"  
+      $output = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)  
+      Write-Output "$output"  
+      } 
+
       Get-ChildItem -Recurse -Filter "*.coverage" | % {  
       $outfile = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"  
       $output = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)  
