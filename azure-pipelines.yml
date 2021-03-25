@@ -53,6 +53,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      Write-Output "Begin migrating components"
       Get-ChildItem -Recurse -Filter "*.coverage" | % {  
       $outfile = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"  
       $output = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)  
@@ -63,7 +64,6 @@ steps:
       "Done"
     showWarnings: true
     workingDirectory: '$(Agent.TempDirectory)'
-
 
 
 - task: SonarQubeAnalyze@4
