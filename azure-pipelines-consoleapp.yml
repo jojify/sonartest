@@ -43,6 +43,7 @@ steps:
       !**\*TestAdapter.dll
       !**\obj\**
     searchFolder: '$(System.DefaultWorkingDirectory)'
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
@@ -55,6 +56,8 @@ steps:
       etstandard1.0\CodeCoverage\CodeCoverage.exe analyze /output:$output $_.FullName  
       }  
       "Done"
+    workingDirectory: '$(Agent.TempDirectory)'
+
 - task: SonarQubeAnalyze@4
 - task: SonarQubePublish@4
   inputs:
