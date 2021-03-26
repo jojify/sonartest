@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SomeConsoleApplication;
+
 
 namespace SomeConsoleApplicationTest
 {
@@ -16,6 +16,5 @@ namespace SomeConsoleApplicationTest
             // Assert
             Assert.IsTrue(actual);
         }
-
     }
 }
