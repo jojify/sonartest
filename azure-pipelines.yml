@@ -53,6 +53,12 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      Write-Output "new"
+      $outfile1 = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"  
+      $output1 = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)  
+      Write-Output "$output1"
+      Write-Output "$outfile1"        
+
       Get-ChildItem -Recurse -Filter "*.coverage" | % {  
       $outfile = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"  
       $output = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)  
@@ -63,7 +69,6 @@ steps:
       "Done"
     showWarnings: true
     workingDirectory: '$(Agent.TempDirectory)'
-
 
 
 - task: SonarQubeAnalyze@4
