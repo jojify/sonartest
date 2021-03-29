@@ -29,7 +29,7 @@ steps:
     projectName: 'azurepipelinecoverage'
     extraProperties: |
             'sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml'
-            'sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx'
+            'sonar.cs.vstest.reportsPaths=$(System.DefaultWorkingDirectory)/TestResults/*.trx'
 
 - task: VSBuild@1
   inputs:
@@ -45,7 +45,7 @@ steps:
     searchFolder: '$(System.DefaultWorkingDirectory)'
     runInParallel: true
     codeCoverageEnabled: true
-    
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
