@@ -25,7 +25,7 @@ steps:
   inputs:
     SonarQube: 'azurepipelinecoverage'
     scannerMode: 'MSBuild'
-    projectKey: 'e7999cfd423ffe8f83ea6e36d38cae4974c88298'
+    projectKey: '4674257d2695267a2b003f27d21562cdbb1615d5'
     projectName: 'azurepipelinecoverage'
     extraProperties: |
             'sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/*.trx'
