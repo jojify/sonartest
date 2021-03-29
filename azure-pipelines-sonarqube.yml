@@ -25,7 +25,7 @@ steps:
   inputs:
     SonarQube: 'azurepipelinecoverage'
     scannerMode: 'MSBuild'
-    projectKey: 'aafd83f996a803d86c3f2863d6729133fe46bc72'
+    projectKey: 'e7999cfd423ffe8f83ea6e36d38cae4974c88298'
     projectName: 'azurepipelinecoverage'
     extraProperties: |
             'sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml'
@@ -49,7 +49,7 @@ steps:
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest'
-    testResultsFiles: '$(Agent.TempDirectory)/TestResults/TEST-*.xml'
+    testResultsFiles: '$(Agent.TempDirectory)/TestResults/Test-*.xml'
 
 
 - task: PowerShell@2
