@@ -46,12 +46,6 @@ steps:
     runInParallel: true
     codeCoverageEnabled: true
     
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'VSTest'
-    testResultsFiles: '$(Agent.TempDirectory)/TestResults/Test-*.xml'
-
-
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
