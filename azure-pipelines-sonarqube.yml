@@ -28,9 +28,9 @@ steps:
     projectKey: 'e7999cfd423ffe8f83ea6e36d38cae4974c88298'
     projectName: 'azurepipelinecoverage'
     extraProperties: |
-            'sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml'
             'sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/*.trx'
-
+            'sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml'
+            
 - task: VSBuild@1
   inputs:
     solution: '**\*.sln'
