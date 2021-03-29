@@ -102,11 +102,28 @@
   </Target>
   <Import Project="..\packages\MSTest.TestAdapter.2.2.3\build\net45\MSTest.TestAdapter.targets" Condition="Exists('..\packages\MSTest.TestAdapter.2.2.3\build\net45\MSTest.TestAdapter.targets')" />
   <Import Project="..\packages\Microsoft.CodeCoverage.16.9.1\build\netstandard1.0\Microsoft.CodeCoverage.targets" Condition="Exists('..\packages\Microsoft.CodeCoverage.16.9.1\build\netstandard1.0\Microsoft.CodeCoverage.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+<PropertyGroup>
+  <SqCodeCoverageResultsFile>VisualStudio.coveragexml</SqCodeCoverageResultsFile>
+</PropertyGroup>
+<Target Name="BuildTestAssemblyList"
+      BeforeTargets="RunAllTestsWithCodeCoverageAndConvertToXmlOutput">
+  <CreateItem Include="**\*.Tests.Unit.dll">
+    <Output TaskParameter="Include" ItemName="TestAssemblies" />
+  </CreateItem>
+</Target>
+<Target Name="BuildCoverageFileList"
+      BeforeTargets="RunAllTestsWithCodeCoverageAndConvertToXmlOutput">
+  <CreateItem Include="**\*.coverage">
+    <Output TaskParameter="Include" ItemName="CoverageFiles" />
+  </CreateItem>    
+</Target>
+<Target Name="RunAllTestsWithCodeCoverageAndConvertToXmlOutput">
+  <Delete Condition="Exists($(SqCodeCoverageResultsFile))" Files="$(SqCodeCoverageResultsFile)" />
+  <Delete Files="@(CoverageFiles)" />
+  <Exec Command="&quot;$(VsTestExecutable)&quot; /EnableCodeCoverage /Settings:MyProject.runsettings /inIsolation /logger:trx  @(TestAssemblies->'&quot;%(FullPath)&quot;',' ') " /> 
+  <CreateItem Include="**\*.coverage">
+    <Output TaskParameter="Include" ItemName="NewCoverageFiles" />
+  </CreateItem>    
+  <Exec Command="&quot;$(VsCodeCoverageExecutable)&quot; analyze /output:&quot;$(SqCodeCoverageResultsFile)&quot; @(NewCoverageFiles->'&quot;%(FullPath)&quot;',' ') " />
+</Target>
 </Project>
