@@ -23,10 +23,10 @@ steps:
 
 - task: SonarQubePrepare@4
   inputs:
-    SonarQube: 'azurepipelinecoverage'
+    SonarQube: 'sonartest'
     scannerMode: 'MSBuild'
-    projectKey: '4674257d2695267a2b003f27d21562cdbb1615d5'
-    projectName: 'azurepipelinecoverage'
+    projectKey: '09a88619cd664fc1ab83c7832ed3c51642b1dd99'
+    projectName: 'sonartest'
     extraProperties: |
             'sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/*.trx'
             'sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml'
