@@ -29,7 +29,7 @@ steps:
     projectName: 'azurepipelinecoverage'
     extraProperties: |
             'sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml'
-            'sonar.cs.vstest.reportsPaths=$(System.DefaultWorkingDirectory)/TestResults/*.trx'
+            'sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/*.trx'
 
 - task: VSBuild@1
   inputs:
