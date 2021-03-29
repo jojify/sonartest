@@ -27,7 +27,9 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: 'aafd83f996a803d86c3f2863d6729133fe46bc72'
     projectName: 'azurepipelinecoverage'
-    extraProperties: 'sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml'
+    extraProperties: |
+  'sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml'
+  'sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/**/*.trx'
 
 - task: VSBuild@1
   inputs:
