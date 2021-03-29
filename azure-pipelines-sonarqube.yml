@@ -21,14 +21,47 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
+- task: SonarQubePrepare@4
+  inputs:
+    SonarQube: 'azurepipelinecoverage'
+    scannerMode: 'MSBuild'
+    projectKey: 'aafd83f996a803d86c3f2863d6729133fe46bc72'
+    projectName: 'azurepipelinecoverage'
+    extraProperties: 'sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml'
+
 - task: VSBuild@1
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    solution: '**\*.sln'
 
 - task: VSTest@2
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\*test*.dll
+      !**\*TestAdapter.dll
+      !**\obj\**
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    runInParallel: true
+    codeCoverageEnabled: true
+    
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/TestResults/TEST-*.xml'
+
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Get-ChildItem -Recurse -Filter "*.coverage" | Foreach-Object {
+          $outfile = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"
+          $output = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)
+          & packages\Microsoft.CodeCoverage.16.9.1\build\netstandard1.0\CodeCoverage\CodeCoverage.exe analyze /output:$output $_.FullName 
+      }
+
+- task: SonarQubeAnalyze@4
+
+- task: SonarQubePublish@4
+  inputs:
+    pollingTimeoutSec: '300'
