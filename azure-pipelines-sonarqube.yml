@@ -25,7 +25,7 @@ steps:
   inputs:
     SonarQube: 'sonartest'
     scannerMode: 'MSBuild'
-    projectKey: '09a88619cd664fc1ab83c7832ed3c51642b1dd99'
+    projectKey: 'e58b17a1579fa6068fedd6f9207e4e332bb143c7'
     projectName: 'sonartest'
     extraProperties: 'sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\TestResults\*.trx'
             
