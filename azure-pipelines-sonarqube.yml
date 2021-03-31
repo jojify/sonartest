@@ -27,9 +27,7 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: '09a88619cd664fc1ab83c7832ed3c51642b1dd99'
     projectName: 'sonartest'
-    extraProperties: |
-            'sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)/*.trx'
-            'sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml'
+        extraProperties: 'sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\TestResults\*.trx'
             
 - task: VSBuild@1
   inputs:
@@ -59,6 +57,12 @@ steps:
       }
 
 - task: SonarQubeAnalyze@4
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/*.trx'
+    searchFolder: '$(Agent.TempDirectory)\TestResults'
 
 - task: SonarQubePublish@4
   inputs:
