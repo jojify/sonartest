@@ -27,7 +27,7 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: '09a88619cd664fc1ab83c7832ed3c51642b1dd99'
     projectName: 'sonartest'
-        extraProperties: 'sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\TestResults\*.trx'
+    extraProperties: 'sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\TestResults\*.trx'
             
 - task: VSBuild@1
   inputs:
