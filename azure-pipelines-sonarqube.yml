@@ -50,10 +50,24 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Get-ChildItem -Recurse -Filter "*.coverage" | Foreach-Object {
-          $outfile = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"
-          $output = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)
-          & packages\Microsoft.CodeCoverage.16.9.1\build\netstandard1.0\CodeCoverage\CodeCoverage.exe analyze /output:$output $_.FullName 
+      function ConvertCodeCoverageFiles($path) {
+          Get-ChildItem -Recurse -Filter "*.coverage" | Foreach-Object {
+              $outfile = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"
+              $output = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)
+              & $path analyze /output:$output $_.FullName 
+              Write-Output $_.FullName
+          }
+      }
+      Get-ChildItem -Recurse | Where-Object { $_.PsIsContainer -and $_.FullName -notmatch 'amd64' } | Foreach-Object {
+          if ( "packages" -eq $_.name ) {
+               Get-ChildItem -Exclude "amd64" -Path $_.FullName -recurse -Filter "*.exe" | Where {$_.FullName -notlike "*\amd64\*.exe"} | Foreach-Object {
+                      # $outfile = "$([System.IO.Path]::GetFileName($_.FullName))"
+                      # Write-Output $outfile
+                      # Write-Output $_.name
+                      ConvertCodeCoverageFiles($_.FullName)
+                      Write-Output $_.FullName
+              }
+          }
       }
 
 - task: SonarQubeAnalyze@4
