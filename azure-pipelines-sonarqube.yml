@@ -53,7 +53,7 @@ steps:
       Get-ChildItem -Recurse -Filter "*.coverage" | Foreach-Object {
           $outfile = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"
           $output = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)
-          & Web\VS NET\packages\Microsoft.CodeCoverage.16.9.1\build\netstandard1.0\CodeCoverage\CodeCoverage.exe analyze /output:$output $_.FullName 
+          & packages\Microsoft.CodeCoverage.16.9.1\build\netstandard1.0\CodeCoverage\CodeCoverage.exe analyze /output:$output $_.FullName 
       }
 
 - task: SonarQubeAnalyze@4
