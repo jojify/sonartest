@@ -25,7 +25,7 @@ steps:
   inputs:
     SonarQube: 'sonartest'
     scannerMode: 'MSBuild'
-    projectKey: '1933aa501e4390e05d21ee800d3c20426ea77962'
+    projectKey: '763c0898ed7276f5beb5ff09b480dc193c0f637a'
     projectName: 'sonartest'
     extraProperties: 'sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml'
 - task: VSBuild@1
