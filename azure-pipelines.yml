@@ -1,7 +1,7 @@
-# .NET Desktop
-# Build and run tests for .NET Desktop or Windows classic desktop solutions.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
 trigger:
 - master
@@ -27,13 +27,11 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: '763c0898ed7276f5beb5ff09b480dc193c0f637a'
     projectName: 'sonartest'
-    extraProperties: 'sonar.cs.vscoveragexml.reportsPaths=$(Agent.TempDirectory)/**/*.coveragexml'
+    extraProperties: 'sonar.cs.vstest.reportsPaths=$(Agent.TempDirectory)\TestResults\*.trx'
+            
 - task: VSBuild@1
   inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    
+    solution: '**\*.sln'
 
 - task: VSTest@2
   inputs:
@@ -43,35 +41,43 @@ steps:
       !**\*TestAdapter.dll
       !**\obj\**
     searchFolder: '$(System.DefaultWorkingDirectory)'
+    runInParallel: true
+    codeCoverageEnabled: true
 
-- task: PublishTestResults@2
-  inputs:
-    testRunner: VSTest
-    testResultsFiles: '**/*.trx'
+
 
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
-      Write-Output "new"
-      $outfile1 = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"  
-      $output1 = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)  
-      Write-Output "$output1"
-      Write-Output "$outfile1"        
-
-      Get-ChildItem -Recurse -Filter "*.coverage" | % {  
-      $outfile = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"  
-      $output = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)  
-      "Analyse '$($_.Name)' with output '$outfile'..."  
-      . $env:USERPROFILE\.nuget\packages\microsoft.codecoverage\16.6.1\build  
-      etstandard1.0\CodeCoverage\CodeCoverage.exe analyze /output:$output $_.FullName  
-      }  
-      "Done"
-    showWarnings: true
-    workingDirectory: '$(Agent.TempDirectory)'
-
+      function ConvertCodeCoverageFiles($path) {
+          Get-ChildItem -Recurse -Filter "*.coverage" | Foreach-Object {
+              $outfile = "$([System.IO.Path]::GetFileNameWithoutExtension($_.FullName)).coveragexml"
+              $output = [System.IO.Path]::Combine([System.IO.Path]::GetDirectoryName($_.FullName), $outfile)
+              & $path analyze /output:$output $_.FullName 
+              Write-Output $_.FullName
+          }
+      }
+      Get-ChildItem -Recurse | Where-Object { $_.PsIsContainer -and $_.FullName -notmatch 'amd64' } | Foreach-Object {
+          if ( "packages" -eq $_.name ) {
+               Get-ChildItem -Exclude "amd64" -Path $_.FullName -recurse -Filter "*.exe" | Where {$_.FullName -notlike "*\amd64\*.exe"} | Foreach-Object {
+                      # $outfile = "$([System.IO.Path]::GetFileName($_.FullName))"
+                      # Write-Output $outfile
+                      # Write-Output $_.name
+                      ConvertCodeCoverageFiles($_.FullName)
+                      Write-Output $_.FullName
+              }
+          }
+      }
 
 - task: SonarQubeAnalyze@4
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/*.trx'
+    searchFolder: '$(Agent.TempDirectory)\TestResults'
+
 - task: SonarQubePublish@4
   inputs:
     pollingTimeoutSec: '300'
