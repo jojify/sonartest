@@ -70,13 +70,13 @@ steps:
           }
       }
 
-- task: SonarQubeAnalyze@4
-
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest'
     testResultsFiles: '**/*.trx'
     searchFolder: '$(Agent.TempDirectory)\TestResults'
+
+- task: SonarQubeAnalyze@4
 
 - task: SonarQubePublish@4
   inputs:
