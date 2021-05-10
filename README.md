@@ -27,4 +27,6 @@ This example demonstrates how to analyze a .NET Solution with the SonarScanner f
 
 ```powershell
         SonarScanner.MSBuild.exe end
+
+        Test tag
 ```
